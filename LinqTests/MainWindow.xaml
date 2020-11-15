@@ -1,0 +1,37 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LinqTests"
+        xmlns:Properties="clr-namespace:LinqTests.Properties" x:Class="LinqTests.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Initialized="Window_Loaded">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
+            <TabItem Header="Linq to SQL" Margin="-2,-2,-54.2,-0.2">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Выполнить" HorizontalAlignment="Left" Margin="614,153,0,0" VerticalAlignment="Top" Width="141" Height="35" FontSize="16" Click="Button_Click"/>
+                    <ComboBox x:Name="cmBox1" HorizontalAlignment="Left" Margin="593,84,0,0" VerticalAlignment="Top" Width="185" Height="24" Loaded="ComboBox_Initialized"/>
+                    <Label Content="Выбор метода" HorizontalAlignment="Left" Margin="593,47,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBox x:Name="fileInfo" HorizontalAlignment="Left" Height="155" Margin="10,33,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="564" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True"/>
+                    <TextBox x:Name="LogInfo"  HorizontalAlignment="Left" Height="155" Margin="10,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="564" IsReadOnly="True"/>
+                    <Label Content="Сгенерированый запрос" HorizontalAlignment="Left" Margin="23,196,0,0" VerticalAlignment="Top" Width="272"/>
+                    <Label Content="Результат" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" Width="272"/>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Linq to DataSet" Margin="56.2,-2,-107.6,0">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Выполнить" HorizontalAlignment="Left" Margin="614,153,0,0" VerticalAlignment="Top" Width="141" Height="35" FontSize="16" Click="Button_Click_1"/>
+                    <ComboBox x:Name="cmBox2" HorizontalAlignment="Left" Margin="593,84,0,0" VerticalAlignment="Top" Width="185" Height="24" Loaded="ComboBox_Initialized">
+                        <ListBoxItem Content="ExampleOfSelect"/>
+                    </ComboBox>
+                    <Label Content="Выбор метода" HorizontalAlignment="Left" Margin="593,47,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBox x:Name="fileInfo1" HorizontalAlignment="Left" Height="155" Margin="10,33,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="564" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True"/>
+                    <Label Content="Результат" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" Width="272"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
