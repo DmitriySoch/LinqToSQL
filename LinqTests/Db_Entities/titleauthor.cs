@@ -9,7 +9,7 @@ using System.Data.Linq.Mapping;
 namespace LinqToSQL
 {
     [Table(Name = "titleauthor")]
-    public class Titleauthor
+    public class Titleauthor : Db_entity
     {
         [Column(Name = "au_id", IsPrimaryKey = true, DbType="VarChar(11) NOT NULL", CanBeNull=false)]
         public string au_id { get; set; }

@@ -1,71 +1,68 @@
 ﻿using System;
 using System.Data.Linq;
+using System.Data.Linq.Mapping;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 
 namespace LinqToSQL
 {
-    public class LinqToSql
+    public class LinqToSql:DataContext
     {
-        private DataContext dbContext;
         public static StringBuilder file = new StringBuilder();
         public static StringBuilder log = new StringBuilder();
-        private static DataContext Connect(SqlConnection dbConnection)
+
+        public LinqToSql(SqlConnection dbConnection):base(dbConnection)
         {
-            return new DataContext(dbConnection) { Log = new StringWriter(log) };
+            this.Log = new StringWriter(log);
         }
 
-        public LinqToSql(SqlConnection dbConnection)
-        {
-            dbContext = Connect(dbConnection);
-        }
-
-        public void DeleteData()
+        public void DeleteData(object title_id)
         {
             ClearLog();
             //Попытка удаления строки со значением title_id = DC1234 из таблицы titles
-            var obj = dbContext.GetTable<Titles>().First(x => x.title_id == "DC1234");
+            var obj = this.GetTable<Titles>().First(x => x.title_id.CompareTo((string)title_id)==0);
             file.AppendLine("Результат работы");
             file.AppendLine($"До удаления : {obj.title_id} | {obj.title} ");
-            dbContext.GetTable<Titles>().DeleteOnSubmit(obj);
+            this.GetTable<Titles>().DeleteOnSubmit(obj);
             //Принятие изменений
-            dbContext.SubmitChanges();
+            this.SubmitChanges();
             //Проверка наличия удаленой строки
-            var res = dbContext.GetTable<Titles>().FirstOrDefault(x => x.title_id == "DC1234");
-            file.AppendLine($"После удаления : {res.title_id} | {res.title} ");
-
+            var res = this.GetTable<Titles>().FirstOrDefault(x => x.title_id.CompareTo((string)title_id) == 0);
+            file.AppendLine($"После удаления : {res?.title_id} | {res?.title} ");
         }
 
         private void ClearLog()
         {
             log = new StringBuilder();
-            dbContext.Log = new StringWriter(log);
+            this.Log = new StringWriter(log);
             file = new StringBuilder();
         }
 
-        public void UpdateData()
+        public void UpdateData(object stor_id, object qty)
         {
             ClearLog();            
-            var data = dbContext.GetTable<Sale>().Take(1);
+            var data = this.GetTable<Sale>().First(x => x.title_id.CompareTo((string)stor_id) == 0);
             file.AppendLine("До изменения");
-            Print(data);
+            file.AppendLine($"stor_id {data.stor_id} | qty  {data.qty} ");
             //Изменение значения первой строки в таблице Sale
-            data.First().qty += 11;
-            file.AppendLine("После изменения");
+            data.qty = short.Parse((string)qty);
             //Проверка изменений
-            dbContext.SubmitChanges();
-            Print(data);
+            this.SubmitChanges(); //TODO
+            file.AppendLine("После изменения");
+            file.AppendLine($"stor_id {data.stor_id} | qty  {data.qty} ");
         }
 
-        public void FilterData()
+        public void FilterData(object start_with)
         {
             ClearLog();
             //Выбираем только тех авторов, номер телефона которых начинается на 415
             var filtredData =
-                from u in dbContext.GetTable<Authors>()
-                where u.phone.StartsWith("415")
+                from u in this.GetTable<Authors>()
+                where u.phone.StartsWith((string)start_with)
                 select u;
             Print(filtredData);
         }
@@ -86,7 +83,7 @@ namespace LinqToSQL
         {
             ClearLog();
             //Сортируем значения в таблице titles сначала по убыванию стоимости книги, а потом по названию
-            var orderedData = from u in dbContext.GetTable<Titles>()
+            var orderedData = from u in this.GetTable<Titles>()
                               orderby u.price descending, u.title
                               select new { Title = u.title, Title_Id = u.title_id, Price = u.price };
             Print(orderedData);
@@ -96,7 +93,7 @@ namespace LinqToSQL
         {
             ClearLog();
             //Группируем строки в таблице по значению типа
-            var groupedData = dbContext.GetTable<Titles>().GroupBy(x => x.type);
+            var groupedData = this.GetTable<Titles>().GroupBy(x => x.type);
             foreach (var item in groupedData)
             {
                 file.AppendLine(item.Key);
@@ -108,25 +105,47 @@ namespace LinqToSQL
             }
         }
 
-        public void PaggingData()
+        public void PaggingData(object start, object step)
         {
             ClearLog();
             //Выводим 13 строк из таблицы titleauthors начиная с 5 строки
-            var pageData = dbContext.GetTable<Titleauthor>().Skip(5).Take(13);
+            var pageData = this.GetTable<Titleauthor>().Skip(int.Parse((string)start)).Take(int.Parse((string)step));
             Print(pageData);
         }
 
-        public void InsertData()
+        public void InsertData(object title_id, object title)
         {
             ClearLog();
             //Вставляем новую книгу с id DC1234 в таблицу titles
-            var newItem = new Titles() { title_id = "DC1234", title = "Torment with SQL" };
-            dbContext.GetTable<Titles>().InsertOnSubmit(newItem);
+            var newItem = new Titles() { title_id = (string)title_id, title = (string)title};
+            this.GetTable<Titles>().InsertOnSubmit(newItem);
             //Принимаем изменения
-            dbContext.SubmitChanges();
+            this.SubmitChanges();
             //Проверяем наличие добавленной книги
-            var result = dbContext.GetTable<Titles>().First(x => x.title_id == "DC1234");
+            var result = this.GetTable<Titles>().First(x => x.title_id.CompareTo(title_id)==0);
             file.AppendLine(result.title_id);
+        }
+
+        public void Execute()
+        {
+            ClearLog();
+            this.ExecuteQuery<Titles>("select * from titles where type = 'business'");
+            this.ExecuteCommand("drop table if exists test");
+            this.ExecuteCommand("create table test (price int)");
+            var result = 0.0;
+            GetMaxPrice("213-46-8915", ref result);
+            file.AppendLine(result.ToString());
+            
+        }
+
+        [Function(Name = "getMaxPrice")]
+        [return: Parameter(DbType = "Int")]
+        private int GetMaxPrice([Parameter(Name = "author_id", DbType = "NVarChar(100)")] string author_id,
+                                 [Parameter(Name = "maxPrice", DbType = "Money")] ref double maxPrice)
+{
+            IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), author_id, maxPrice);
+            maxPrice = (double)result.GetParameterValue(1);
+            return (int)result.ReturnValue;
         }
     }
 }

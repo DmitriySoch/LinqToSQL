@@ -65,6 +65,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Db_Entities\authors.cs" />
+    <Compile Include="Db_Entities\Db_entity.cs" />
     <Compile Include="Db_Entities\sales.cs" />
     <Compile Include="Db_Entities\titleauthor.cs" />
     <Compile Include="Db_Entities\titles.cs" />

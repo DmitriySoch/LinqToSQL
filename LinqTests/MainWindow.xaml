@@ -10,9 +10,9 @@
     <Grid>
         <TabControl HorizontalAlignment="Left" Height="420" VerticalAlignment="Top" Width="794" Margin="0,0,-0.4,0">
             <TabItem Header="Linq to SQL" Margin="-2,-2,-54.2,-0.2">
-                <Grid Background="#FFE5E5E5">
-                    <Button Content="Выполнить" HorizontalAlignment="Left" Margin="614,153,0,0" VerticalAlignment="Top" Width="141" Height="35" FontSize="16" Click="Button_Click"/>
-                    <ComboBox x:Name="cmBox1" HorizontalAlignment="Left" Margin="593,84,0,0" VerticalAlignment="Top" Width="185" Height="24" Loaded="ComboBox_Initialized"/>
+                <Grid x:Name="Table" Background="#FFE5E5E5">
+                    <Button Content="Выполнить" HorizontalAlignment="Left" Margin="614,331,0,0" VerticalAlignment="Top" Width="141" Height="35" FontSize="16" Click="Button_Click"/>
+                    <ComboBox x:Name="cmBox1" HorizontalAlignment="Left" Margin="593,84,0,0" VerticalAlignment="Top" Width="185" Height="24" Loaded="ComboBox_Initialized" SelectionChanged="cmBox1_SelectionChanged"/>
                     <Label Content="Выбор метода" HorizontalAlignment="Left" Margin="593,47,0,0" VerticalAlignment="Top" FontSize="16"/>
                     <TextBox x:Name="fileInfo" HorizontalAlignment="Left" Height="155" Margin="10,33,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="564" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" IsReadOnly="True"/>
                     <TextBox x:Name="LogInfo"  HorizontalAlignment="Left" Height="155" Margin="10,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="564" IsReadOnly="True"/>

@@ -9,7 +9,7 @@ using System.Data.Linq.Mapping;
 namespace LinqToSQL
 {
     [Table(Name = "titles")]
-    public class Titles
+    public class Titles : Db_entity
     {
         public Titles()
         {

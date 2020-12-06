@@ -10,7 +10,7 @@ using System.Data.Linq.Mapping;
 namespace LinqToSQL
 {
     [Table(Name = "sales")]
-    public class Sale
+    public class Sale : Db_entity
     {
         [Column(Name = "stor_id", IsPrimaryKey = true, DbType="Char(4) NOT NULL", CanBeNull=false)]
         public string stor_id { get; set; }
